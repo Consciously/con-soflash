@@ -1,4 +1,0 @@
-- .. make CLI
-	- x "npm run import"
-		- x import.ts, prints out hallo 
-	- 
