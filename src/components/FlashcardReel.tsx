@@ -1,20 +1,10 @@
 'use client';
 
-import { z } from 'zod';
 import flashcardData from '@/data/flashcard.json';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/utils/utils';
-
-const flashCardSchema = z.object({
-	id: z.string().max(6),
-	category: z.string(),
-	front: z.string(),
-	back: z.string(),
-	pronunciation: z.string(),
-});
-
-type TflashCard = z.infer<typeof flashCardSchema>;
+import { TflashCard } from '@/lib/validation/validation';
 
 export default function FlashcardReel() {
 	const flashcards: TflashCard[] = Array.from(flashcardData);
