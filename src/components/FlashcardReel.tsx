@@ -1,14 +1,15 @@
 'use client';
 
-import flashcardData from '@/data/flashcard.json';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/utils/utils';
-import { TflashCard } from '@/lib/validation/validation';
+import { trpc } from '@/trpc/client';
 
 export default function FlashcardReel() {
-	const flashcards: TflashCard[] = Array.from(flashcardData);
 	const [openFlashcardId, setOpenFlashcardId] = useState<string | null>(null);
+	const { data: flashcards } = trpc.getFlashcards.useQuery({
+		key: 'flashcard',
+	});
 
 	const handleOpenFlashcard = (flashcardId: string) => {
 		setOpenFlashcardId(flashcardId === openFlashcardId ? null : flashcardId);
@@ -17,7 +18,7 @@ export default function FlashcardReel() {
 	return (
 		<div className='bg-zinc-100 py-8 px-4'>
 			<ul className='grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 place-content-center'>
-				{flashcards.map(flashcard => (
+				{flashcards?.map((flashcard: any) => (
 					<li
 						key={flashcard.id}
 						onClick={() => handleOpenFlashcard(flashcard.id)}
