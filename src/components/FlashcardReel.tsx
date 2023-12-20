@@ -2,7 +2,9 @@
 
 import { z } from 'zod';
 import flashcardData from '@/data/flashcard.json';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { cn } from '@/utils/utils';
 
 const flashCardSchema = z.object({
 	id: z.string().max(6),
@@ -19,9 +21,7 @@ export default function FlashcardReel() {
 	const [openFlashcardId, setOpenFlashcardId] = useState<string | null>(null);
 
 	const handleOpenFlashcard = (flashcardId: string) => {
-		setOpenFlashcardId(currentId =>
-			currentId === flashcardId ? null : flashcardId,
-		);
+		setOpenFlashcardId(flashcardId === openFlashcardId ? null : flashcardId);
 	};
 
 	return (
@@ -31,20 +31,26 @@ export default function FlashcardReel() {
 					<li
 						key={flashcard.id}
 						onClick={() => handleOpenFlashcard(flashcard.id)}
-						className='border border-zinc-400 h-40 rounded-lg shadow-sm shadow-zinc-500/60'
+						className='cursor-pointer flip-card'
 					>
-						<div className='perspective'>
-							<div className='w-full h-full flex flex-col justify-center items-center'>
+						<motion.div
+							className={cn(
+								'flip-card-inner border border-zinc-400 w-full h-40 rounded-lg shadow-sm shadow-zinc-500/60',
+							)}
+							animate={{ rotateY: openFlashcardId === flashcard.id ? 180 : 0 }}
+							transition={{ duration: 0.2 }}
+						>
+							<div className='flip-card-front w-full h-full flex flex-col justify-center items-center'>
 								<p>{flashcard.category}</p>
 								<p>{flashcard.front}</p>
 							</div>
-							{openFlashcardId === flashcard.id ? (
-								<div>
+							{openFlashcardId === flashcard.id && (
+								<div className='flip-card-back w-full h-full flex flex-col justify-center items-center bg-zinc-600'>
 									<p>{flashcard.back}</p>
 									<p>{flashcard.pronunciation}</p>
 								</div>
-							) : null}
-						</div>
+							)}
+						</motion.div>
 					</li>
 				))}
 			</ul>
