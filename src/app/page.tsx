@@ -1,7 +1,10 @@
 import FlashcardReel from '@/components/FlashcardReel';
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
+import { serverClient } from '@/trpc/serverClient';
 
-export default function Home() {
+export default async function Home() {
+	const flashcards = await serverClient.getFlashcards();
+
 	return (
 		<>
 			<section className='bg-gray-50'>
@@ -15,7 +18,7 @@ export default function Home() {
 			</section>
 			<section className='bg-gray-50'>
 				<MaxWidthWrapper className='py-10'>
-					<FlashcardReel />
+					<FlashcardReel initialFlashcards={flashcards} />
 				</MaxWidthWrapper>
 			</section>
 		</>

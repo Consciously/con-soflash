@@ -4,11 +4,21 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/utils/utils';
 import { trpc } from '@/trpc/client';
+import { serverClient } from '@/trpc/serverClient';
 
-export default function FlashcardReel() {
+export default function FlashcardReel({
+	initialFlashcards,
+}: {
+	initialFlashcards: Awaited<
+		ReturnType<(typeof serverClient)['getFlashcards']>
+	>;
+}) {
 	const [openFlashcardId, setOpenFlashcardId] = useState<string | null>(null);
-	const { data: flashcards } = trpc.getFlashcards.useQuery({
-		key: 'flashcard',
+
+	const { data: flashcards } = trpc.getFlashcards.useQuery(undefined, {
+		initialData: initialFlashcards,
+		refetchOnMount: false,
+		refetchOnReconnect: false,
 	});
 
 	const handleOpenFlashcard = (flashcardId: string) => {
